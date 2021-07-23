@@ -104,3 +104,10 @@ class siteInstruction(models.Model):
 
     def __str__(self):
         return "%s" % (self.category)
+        
+class NC(models.Model):
+    category = models.TextField()
+    security_level = models.TextField()
+
+    def __str__(self):
+        return "%s" % (self.category)

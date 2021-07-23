@@ -14,6 +14,12 @@ urlpatterns = [
     path('material/', MaterialsView.as_view(), name="Material Data"),
     path('queries/', QueriesView.as_view(), name="Queries Data"),
 
+    path('Roles/', RolesView.as_view(), name="Roles Data"),
+    path('Admin/', AdminView.as_view(), name="Admin Data"),
+    path('siteInstruction/', siteInstructionView.as_view(), name="siteInstruction Data"),
+    path('FAQs/', FAQsView.as_view(), name="FAQs Data"),
+    path('NC/', NCView.as_view(), name="NC Data"),
+
     path('login/', Login.as_view(), name="user login"),
     path('licenses/', LicensesView.as_view(), name="user Licenses"),
     #path('logout/', Logout.as_view(), name="user logout"),
