@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import status, permissions
 from BuildCron.serializers import *
 from django.db.models import Q
+import csv
 
 
 class CustomUserCreate(APIView):
@@ -181,7 +182,7 @@ class ChecklistView(APIView):
 
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request):
+    def get(self, request):      
         userId = request.GET.get('id')
         reg_id = request.GET.get('checklist_id')
         if userId:
@@ -196,12 +197,20 @@ class ChecklistView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        data = request.data
-        if (data.get('Action') == "Bulk"):
-            pass
+        data = request.data      
+        # if (data.get('Action') == "Bulk"):       
+            # pass
             #Do the bulk upload here
+
+        with open('Checklist.csv') as csv_file:
+            data = csv.reader(csv_file)         
+            for row in data:
+                checklist = Checklist.objects.get_or_create(                
+                name=row[0],
+                type=row[1],
+                )
         try:
-            serializer = ChecklistSerializer(data=data)
+            serializer = ChecklistSerializer(data=checklist)
             if serializer.is_valid():
                 serializer.save()
                 return Response({"Status": True,
@@ -257,11 +266,19 @@ class QuestionsView(APIView):
     def post(self, request):
 
         data = request.data
-        if (data.get('Action') == "Bulk"):
-            pass
+        # if (data.get('Action') == "Bulk"):
+        #     pass
             #Do the bulk upload here
+        with open('Question.csv') as csv_file:
+            data = csv.reader(csv_file)           
+            for row in data:
+                question = Questions.objects.get_or_create(                
+                checklist=row[0],
+                name=row[1],
+                status=row[2],
+                )
         try:
-            serializer = QuestionsSerializer(data=data)
+            serializer = QuestionsSerializer(data=question)
             if serializer.is_valid():
                 serializer.save()
                 return Response({"Status": True,
@@ -316,11 +333,22 @@ class MaterialsView(APIView):
 
     def post(self, request):
         data = request.data
-        if (data.get('Action') == "Bulk"):
-            pass
+        print('siiiiiiiiiii')
+        # if (data.get('Action') == "Bulk"):
+        #     pass
             #Do the bulk upload here
+        with open('Material.csv') as csv_file:
+            data = csv.reader(csv_file)   
+      
+            for row in data:
+                material = Material.objects.get_or_create(                
+                name=row[0],
+                description=row[1],
+                uom =row[2],
+                status=row[3],
+            )
         try:
-            serializer = MaterialSerializer(data=data)
+            serializer = MaterialSerializer(data=material)
             if serializer.is_valid():
                 serializer.save()
                 return Response({"Status": True,
